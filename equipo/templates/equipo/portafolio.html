@@ -1,0 +1,166 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Portafolio del Equipo</title>
+    <style>
+        html { scroll-behavior: smooth; }
+        body { margin: 0; font-family: Arial, sans-serif; }
+
+        section {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: #fff;
+            transition: background 0.5s;
+            padding: 40px;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed; /* efecto parallax */
+            position: relative;
+        }
+
+        .card {
+            background-color: rgba(255,255,255,0.95);
+            color: #222;
+            padding: 30px;
+            border-radius: 12px;
+            width: 350px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+
+        .card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .card img {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        h1 { margin: 15px 0 10px 0; }
+        p { margin: 5px 0; }
+        .lista { text-align: left; margin: 10px 0; }
+        .lista li { margin-left: 20px; }
+
+        a {
+            display: inline-block;
+            margin: 8px;
+            padding: 8px 12px;
+            text-decoration: none;
+            color: #fff;
+            background-color: #0073e6;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        a:hover { background-color: #005bb5; }
+
+        nav {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 100;
+        }
+        nav a {
+            margin-left: 10px;
+            color: #fff;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        nav a:hover { text-decoration: underline; }
+
+        .info-contacto {
+            display: none;
+            margin-top: 10px;
+            background-color: rgba(0,0,0,0.1);
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    {% for integrante in integrantes %}
+        <a href="#{{ integrante.nombre|lower }}">{{ integrante.nombre }}</a>
+    {% endfor %}
+</nav>
+
+{% for integrante in integrantes %}
+<section id="{{ integrante.nombre|lower }}" style="background-image: url('{% static integrante.fondo %}');">
+    <div class="card">
+        <img src="{% static integrante.foto %}" alt="Foto {{ integrante.nombre }}">
+        <h1>{{ integrante.nombre }}</h1>
+        <p>{{ integrante.descripcion }}</p>
+
+        <h3>Hobbies</h3>
+        <ul class="lista">
+            {% for hobby in integrante.hobbies %}
+            <li>{{ hobby }}</li>
+            {% endfor %}
+        </ul>
+
+        <h3>Deportes</h3>
+        <ul class="lista">
+            {% for deporte in integrante.deportes %}
+            <li>{{ deporte }}</li>
+            {% endfor %}
+        </ul>
+
+        <h3>Música</h3>
+        <ul class="lista">
+            {% for musica in integrante.musica %}
+            <li>{{ musica }}</li>
+            {% endfor %}
+        </ul>
+
+        <a onclick="toggleContacto('{{ integrante.nombre|lower }}')">Mostrar Contacto</a>
+        <div id="contacto-{{ integrante.nombre|lower }}" class="info-contacto">
+            <p>Correo: {{ integrante.correo }}</p>
+            <p>Teléfono: +56 9 1234 5678</p>
+            <p><a href="{{ integrante.portafolio }}" target="_blank">Portafolio</a></p>
+        </div>
+    </div>
+</section>
+{% endfor %}
+
+<script>
+    // Animación al hacer scroll
+    function mostrarCards() {
+        const cards = document.querySelectorAll('.card');
+        const triggerBottom = window.innerHeight * 0.85;
+
+        cards.forEach(card => {
+            const cardTop = card.getBoundingClientRect().top;
+            if(cardTop < triggerBottom) {
+                card.classList.add('visible');
+            }
+        });
+    }
+
+    // Mostrar/Ocultar contacto
+    function toggleContacto(id) {
+        const div = document.getElementById('contacto-' + id);
+        if(div.style.display === 'block') {
+            div.style.display = 'none';
+        } else {
+            div.style.display = 'block';
+        }
+    }
+
+    window.addEventListener('scroll', mostrarCards);
+    window.addEventListener('load', mostrarCards);
+</script>
+
+</body>
+</html>
