@@ -13,13 +13,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get(
-    "DJANGO_SECRET_KEY",
-    "django-insecure-3nol@q%v-&g(^sr#cd2ue4-&o_9kxyz5%h^03z($k+n32hn*i8"  # fallback local
-)
+
+
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "clave_por_defecto_para_local")
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG", "False") == "True"
+
 
 ALLOWED_HOSTS = ["*"]
 
@@ -71,10 +72,7 @@ WSGI_APPLICATION = 'portafolio.wsgi.application'
 # Local: SQLite, Producción: PostgreSQL con Railway
 if os.environ.get("DATABASE_URL"):
     DATABASES = {
-        'default': dj_database_url.config(
-            default=os.environ.get("DATABASE_URL"),
-            conn_max_age=600
-        )
+        'default': dj_database_url.config(default=os.environ.get("DATABASE_URL"), conn_max_age=600)
     }
 else:
     DATABASES = {
@@ -83,7 +81,6 @@ else:
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
-
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
